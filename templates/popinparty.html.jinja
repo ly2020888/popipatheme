@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>粉粉软软动态卡片</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=PingFang+SC:wght@300;400;500&family=SF+Pro+Display:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sakura-card">
+        <!-- 樱花装饰边框 -->
+        <div class="sakura-border top-left"></div>
+        <div class="sakura-border top-right"></div>
+        <div class="sakura-border bottom-left"></div>
+        <div class="sakura-border bottom-right"></div>
+        
+        <!-- 用户信息区域 -->
+        <div class="user-info">
+            <div class="avatar-container">
+                <img src="{{ card.user.avatar }}" class="user-avatar">
+                <div class="avatar-frame"></div>
+            </div>
+            <div class="user-details">
+                <div class="username">{{ card.user.name }}</div>
+                <div class="user-desc">{{ card.user.desc }}</div>
+            </div>
+        </div>
+        
+        <!-- 动态内容 -->
+        <div class="content-area">
+            <div class="content-text">{{ card.content.text }}</div>
+            
+            <!-- 图片预览 -->
+            {% if card.content.images %}
+            <div class="image-gallery">
+                {% for image in card.content.images %}
+                <div class="image-item">
+                    <img src="{{ image }}" class="preview-image">
+                    <div class="image-overlay"></div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- 转发内容 -->
+            {% if card.retweet %}
+            <div class="retweet-card">
+                <div class="retweet-header">
+                    <span class="retweet-icon">🔄</span>
+                    <span class="retweet-author">{{ card.retweet.author }}</span>
+                </div>
+                <div class="retweet-content">{{ card.retweet.content }}</div>
+                {% if card.retweet.images %}
+                <div class="image-gallery retweet-gallery">
+                    {% for image in card.retweet.images %}
+                    <div class="image-item">
+                        <img src="{{ image }}" class="preview-image">
+                        <div class="image-overlay"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- 底部装饰 -->
+        <div class="bottom-decoration">
+            <div class="flower left-flower"></div>
+            <div class="flower right-flower"></div>
+            <div class="sparkle"></div>
+        </div>
+        <div class="footer-info">
+            <div class="qr-code">
+                <img src="{{ card.qr_code }}" class="qr-image" alt="动态二维码">
+                <div class="qr-label">扫描查看动态来源</div>
+            </div>
+            <div class="meta-info">
+                <div class="timestamp">{{ card.timestamp }}</div>
+                <div class="platform">{{ card.platform }}</div>
+                <div class="developer">via 为世界带来笑容 x Michelle</div>
+            </div>
+        </div>
+        <div class="bang-dream-banner">
+            <img src="{{ bang_dream_logo }}" class="bang-dream-logo" alt="BanG Dream!">
+        </div>
+    </div>
+</body>
+</html>
+
+<style type="text/css">
+/* 基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.retweet-gallery {
+    margin-top: 10px;
+}
+
+.retweet-gallery .image-item {
+    border: 1px solid rgba(255, 182, 193, 0.3);
+}
+body {
+    background: linear-gradient(135deg, #ffe6f2 0%, #f0f8ff 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'PingFang SC', 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.sakura-card {
+    width: 420px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 15px 35px rgba(255, 182, 193, 0.3);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255, 182, 193, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 90% 10%, rgba(255, 215, 0, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 10% 90%, rgba(135, 206, 250, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 90% 90%, rgba(255, 192, 203, 0.2) 0%, transparent 50%);
+}
+
+/* 樱花边框装饰 */
+.sakura-border {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23ffb6c1' d='M50 20 Q60 10 70 20 Q80 30 70 40 Q80 50 70 60 Q60 70 50 60 Q40 70 30 60 Q20 50 30 40 Q20 30 30 20 Q40 10 50 20'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.7;
+}
+
+.sakura-border.top-left { top: -15px; left: -15px; transform: rotate(-15deg); }
+.sakura-border.top-right { top: -15px; right: -15px; transform: rotate(15deg); }
+.sakura-border.bottom-left { bottom: -15px; left: -15px; transform: rotate(15deg); }
+.sakura-border.bottom-right { bottom: -15px; right: -15px; transform: rotate(-15deg); }
+
+/* 用户信息区域 */
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px dashed #ffb6c1;
+}
+
+.avatar-container {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    margin-right: 15px;
+}
+
+.user-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ffd700;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4);
+}
+
+.avatar-frame {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid #87cefa;
+    border-radius: 50%;
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.user-details {
+    flex: 1;
+}
+
+.username {
+    font-size: 22px;
+    font-weight: bold;
+    color: #FF3377;
+    margin-bottom: 5px;
+    font-family: 'SF Pro Display', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.user-desc {
+    font-size: 14px;
+    color: #888;
+    font-family: 'Inter', 'PingFang SC', sans-serif;
+}
+
+/* 内容区域 */
+.content-area {
+    margin-bottom: 20px;
+}
+
+.content-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: rgba(255, 240, 245, 0.5);
+    border-radius: 15px;
+    border-left: 4px solid #ffb6c1;
+    white-space: pre-line;
+    font-family: 'PingFang SC', 'SF Pro Display', -apple-system, sans-serif;
+}
+
+.image-gallery {
+    display: grid;
+    gap: 6px;
+    margin-top: 15px;
+}
+
+/* 根据图片数量调整布局 */
+.image-gallery:has(.image-item:nth-child(1):last-child) {
+    grid-template-columns: 1fr;
+}
+
+.image-gallery:has(.image-item:nth-child(2):last-child) {
+    grid-template-columns: 1fr 1fr;
+}
+
+.image-gallery:has(.image-item:nth-child(3):last-child) {
+    grid-template-columns: 1fr 1fr;
+}
+
+.image-gallery:has(.image-item:nth-child(4):last-child) {
+    grid-template-columns: 1fr 1fr;
+}
+
+.image-gallery:has(.image-item:nth-child(n+5)) {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.image-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 更淡的阴影 */
+    transition: transform 0.3s ease;
+}
+
+.image-item:hover {
+    transform: scale(1.02); /* 更小的悬停效果 */
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,182,193,0.1), rgba(135,206,250,0.1)); /* 更淡的渐变 */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-item:hover .image-overlay {
+    opacity: 1;
+}
+
+/* 转发卡片 */
+.retweet-card {
+    background: rgba(255, 250, 240, 0.8);
+    border-radius: 15px;
+    padding: 15px;
+    margin-top: 15px;
+    border: 2px solid #ffd700;
+    position: relative;
+}
+
+.retweet-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.retweet-icon {
+    font-size: 16px;
+    margin-right: 8px;
+}
+
+.retweet-author {
+    font-size: 14px;
+    color: #ff69b4;
+    font-weight: bold;
+}
+
+.retweet-content {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.retweet-image {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.bottom-decoration {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    pointer-events: none; /* 防止遮挡交互 */
+    z-index: 1; /* 确保在内容下层 */
+}
+.flower {
+    width: 30px;
+    height: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23ff69b4' d='M50 20 Q55 15 60 20 Q65 25 60 30 Q65 35 60 40 Q55 45 50 40 Q45 45 40 40 Q35 35 40 30 Q35 25 40 20 Q45 15 50 20'/%3E%3C/svg%3E");
+    background-size: contain;
+    opacity: 0.6;
+}
+
+.sparkle {
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #ffd700 30%, transparent 70%);
+    border-radius: 50%;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* 响应式调整 */
+@media (max-width: 480px) {
+    .sakura-card {
+        position: relative; /* 让绝对定位的子元素相对于这个容器 */
+        width: 420px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 25px;
+        padding: 25px;
+        /* 其他样式保持不变 */
+    }
+    
+    .image-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+.bang-dream-banner {
+    margin-top: 20px;
+    padding: 10px 0;
+    border-top: 2px dashed #ffb6c1;
+    text-align: center;
+}
+
+.bang-dream-logo {
+    width: 200px;
+    height: auto;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.bang-dream-logo:hover {
+    opacity: 1;
+}
+.footer-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 182, 193, 0.3);
+}
+
+.qr-code {
+    text-align: center;
+}
+
+.qr-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 182, 193, 0.3);
+}
+
+.qr-label {
+    font-size: 10px;
+    color: #888;
+    margin-top: 4px;
+}
+
+.meta-info {
+    text-align: right;
+    font-size: 11px;
+    color: #999;
+    line-height: 1.4;
+}
+
+.timestamp {
+    font-weight: 500;
+    color: #666;
+}
+
+.platform {
+    color: #ff69b4;
+}
+
+.developer {
+    font-style: italic;
+}
+</style>
